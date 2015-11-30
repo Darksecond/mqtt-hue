@@ -58,7 +58,7 @@ lights.onMessage = function(topic, message) {
         if(json["transitionTime"]!=undefined) light.transitionTime = json["transitionTime"];
         if(json["hue"]!=undefined) light.hue = json["hue"];
         if(json["saturation"]!=undefined) light.saturation = json["saturation"];
-        if(json["on"]!=undefined) light.on = json["on"]=='true';
+        if(json["on"]!=undefined) light.on = json["on"];
       } catch (ex) {
         console.log(ex);
       }
