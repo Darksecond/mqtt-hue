@@ -1,0 +1,15 @@
+{
+  "name": "mqtt-hue",
+  "version": "0.0.1",
+  "description": "MQTT To Philips Hue Bridge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "huejay": "^0.11.0",
+    "mqtt": "^1.6.0"
+  }
+}
