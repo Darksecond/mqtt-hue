@@ -1,0 +1,7 @@
+{
+  "hue": {
+    "host": "192.168.0.6",
+    "username": "360e6f271aca9b9fbbf191731a5c78f"
+  },
+  "mqtt": "mqtt://test.mosquitto.org"
+}

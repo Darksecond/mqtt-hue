@@ -1,15 +1,12 @@
 "use strict";
 
+let config = require('./config.json');
+
 let huejay = require('huejay');
 let mqtt    = require('mqtt');
 
-let hueCredentials = {
-  host: "192.168.0.6",
-  username: "360e6f271aca9b9fbbf191731a5c78f"
-};
-
-let hueClient = new huejay.Client(hueCredentials);
-let mqttClient  = mqtt.connect('mqtt://test.mosquitto.org');
+let hueClient = new huejay.Client(config.hue);
+let mqttClient  = mqtt.connect(config.mqtt);
 
 let sensors = require('./sensors');
 let lights = require('./lights');
