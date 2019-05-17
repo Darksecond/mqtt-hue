@@ -41,30 +41,36 @@ lights.onMessage = function(topic, message) {
   if(parts == null) return;
   let identifier = parts[1];
   let property = parts[2];
-  let light = this.lights[identifier];
-  if(light === undefined) return;
+  let currentLight = this.lights[identifier];
+  if(currentLight === undefined) return;
+  this.hue.lights.getById(currentLight.id)
+    .then(light => {
 
-  switch(property) {
-    case "on":
-      light.on = message.toString() == 'true';
-      break;
-    case "brightness":
-      light.brightness = message.toString();
-      break;
-    case "state":
-      try {
-        let json = JSON.parse(message.toString());
-        if(json["brightness"]!=undefined) light.brightness = json["brightness"];
-        if(json["transitionTime"]!=undefined) light.transitionTime = json["transitionTime"];
-        if(json["hue"]!=undefined) light.hue = json["hue"];
-        if(json["saturation"]!=undefined) light.saturation = json["saturation"];
-        if(json["on"]!=undefined) light.on = json["on"];
-      } catch (ex) {
-        console.log(ex);
-      }
-      break;
-  }
-  this.hue.lights.save(light);
+       switch(property) {
+         case "on":
+           light.on = message.toString() == 'true';
+            break;
+          case "brightness":
+            light.brightness = message.toString();
+            break;
+          case "state":
+            try {
+              let json = JSON.parse(message.toString());
+              if(json["brightness"]!=undefined) light.brightness = json["brightness"];
+              if(json["transitionTime"]!=undefined) light.transitionTime = json["transitionTime"];
+              if(json["hue"]!=undefined) light.hue = json["hue"];
+              if(json["saturation"]!=undefined) light.saturation = json["saturation"];
+              if(json["on"]!=undefined) light.on = json["on"];
+            } catch (ex) {
+              console.log(ex);
+            }
+          break;
+       }
+      return this.hue.lights.save(light);
+    })
+    .then(light => {
+      this.publishLight(null, light);
+    });
 };
 
 lights.callback = function() {
