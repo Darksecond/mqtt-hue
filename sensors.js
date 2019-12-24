@@ -10,7 +10,7 @@
 // sensors/hue/{unique_id}/get/buttons/down
 
 let sensors = {
-  timeout: 50,
+  timeout: 15000,
   sensors: {}
 };
 module.exports = sensors;

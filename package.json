@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "huejay": "^0.11.0",
-    "mqtt": "^1.6.0"
+    "huejay": "^1.9.0",
+    "mqtt": "^3.0.0"
   }
 }
