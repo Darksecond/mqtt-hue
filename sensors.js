@@ -8,6 +8,7 @@
 // sensors/hue/{unique_id}/get/buttons/off
 // sensors/hue/{unique_id}/get/buttons/up
 // sensors/hue/{unique_id}/get/buttons/down
+//
 
 let sensors = {
   timeout: 15000,
@@ -31,6 +32,10 @@ sensors.callback = function() {
 
         if(sensor.type == "ZLLSwitch") {
           this.zll(previous, sensor);
+        } else if(sensor.type == "ZHATemperature" || sensor.type == "ZLLTemperature") {
+          this.temp(previous, sensor);
+        } else if(sensor.type == "ZHAHumidity") {
+          this.humidity(previous, sensor);
         }
       }
       setTimeout(this.callback.bind(this), this.timeout);
@@ -39,6 +44,54 @@ sensors.callback = function() {
       console.log(`An error occurred: ${error.message}`);
     });
 };
+
+sensors.humidity = function(previous, current) {
+  var currentAttr = current.state.attributes.attributes;
+  var prevAttr;
+  if(previous) {
+    var prevAttr = previous.state.attributes.attributes;
+  }
+
+  if(!previous || previous.name != current.name)
+    this.mqtt.publish(`sensors/hue/${current.uniqueId}/get/name`, `${current.name}`, { retain: true });
+
+  if(!previous || previous.config["battery"] != current.config["battery"])
+    this.mqtt.publish(`sensors/hue/${current.uniqueId}/get/battery`, `${current.config["battery"]}`, { retain: true });
+
+  if(previous && (prevAttr["lastupdated"] != currentAttr["lastupdated"])) {
+    var humidity =  current.state.attributes.attributes["humidity"] / 100;
+    this.mqtt.publish(`sensors/hue/${current.uniqueId}/get/humidity`, `${humidity}`, { retain: true });
+  }
+
+  if(!previous) {
+    var humidity =  current.state.attributes.attributes["humidity"] / 100;
+    this.mqtt.publish(`sensors/hue/${current.uniqueId}/get/humidity`, `${humidity}`, { retain: true });
+  }
+}
+
+sensors.temp = function(previous, current) {
+  var currentAttr = current.state.attributes.attributes;
+  var prevAttr;
+  if(previous) {
+    var prevAttr = previous.state.attributes.attributes;
+  }
+
+  if(!previous || previous.name != current.name)
+    this.mqtt.publish(`sensors/hue/${current.uniqueId}/get/name`, `${current.name}`, { retain: true });
+
+  if(!previous || previous.config["battery"] != current.config["battery"])
+    this.mqtt.publish(`sensors/hue/${current.uniqueId}/get/battery`, `${current.config["battery"]}`, { retain: true });
+
+  if(previous && (prevAttr["lastupdated"] != currentAttr["lastupdated"])) {
+    var temp =  current.state.attributes.attributes["temperature"] / 100;
+    this.mqtt.publish(`sensors/hue/${current.uniqueId}/get/temperature`, `${temp}`, { retain: true });
+  }
+
+  if(!previous) {
+    var temp =  current.state.attributes.attributes["temperature"] / 100;
+      this.mqtt.publish(`sensors/hue/${current.uniqueId}/get/temperature`, `${temp}`, { retain: true });
+  }
+}
 
 sensors.zll = function(previous, current) {
   if(!previous || previous.name != current.name)
